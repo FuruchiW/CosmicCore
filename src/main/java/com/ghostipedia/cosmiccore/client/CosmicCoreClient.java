@@ -11,6 +11,7 @@ import com.ghostipedia.cosmiccore.client.mirror.DeedHudOverlay;
 import com.ghostipedia.cosmiccore.client.mirror.MirrorScreen;
 import com.ghostipedia.cosmiccore.client.murkbloom.MurkParticle;
 import com.ghostipedia.cosmiccore.client.murkbloom.MurkbloomOverlay;
+import com.ghostipedia.cosmiccore.client.ponder.CosmicPonderBootstrap;
 import com.ghostipedia.cosmiccore.client.renderer.machine.*;
 import com.ghostipedia.cosmiccore.client.tooltip.FoodTooltipClientComponent;
 import com.ghostipedia.cosmiccore.client.tooltip.FoodTooltipComponent;
@@ -56,6 +57,9 @@ public class CosmicCoreClient {
         if (ModList.get().isLoaded("veil")) {
             FirmamentSunsetPostProcessor.register();
         }
+        if (ModList.get().isLoaded("create")) {
+            CosmicPonderBootstrap.init();
+        }
 
         DynamicRenderManager.register(CosmicCore.id("hellfire_foundry_parts"), HellFireFoundryPartRender.TYPE);
         DynamicRenderManager.register(CosmicCore.id("hemographic_transfuser"), HemophagicTransfuserRender.TYPE);
@@ -75,19 +79,7 @@ public class CosmicCoreClient {
     private static ShaderInstance nebulaeShader;
 
     @Getter
-    private static ShaderInstance soulAuraShader;
-
-    @Getter
-    private static ShaderInstance voidBgShader;
-
-    @Getter
     private static ShaderInstance galaxyBgShader;
-
-    @Getter
-    private static ShaderInstance soulCoreShader;
-
-    @Getter
-    private static ShaderInstance soulThreadsShader;
 
     @Getter
     private static ShaderInstance mirrorDiskShader;
@@ -111,16 +103,8 @@ public class CosmicCoreClient {
     public static void shaderRegistry(RegisterShadersEvent event) {
         registerShader(event, "rendertype_nebulae", DefaultVertexFormat.POSITION,
                 (shaderInstance) -> nebulaeShader = shaderInstance);
-        registerShader(event, "soul_aura", DefaultVertexFormat.POSITION_TEX,
-                (shaderInstance) -> soulAuraShader = shaderInstance);
-        registerShader(event, "void_bg", DefaultVertexFormat.POSITION_TEX,
-                (shaderInstance) -> voidBgShader = shaderInstance);
         registerShader(event, "galaxy_bg", DefaultVertexFormat.POSITION_TEX,
                 (shaderInstance) -> galaxyBgShader = shaderInstance);
-        registerShader(event, "soul_core", DefaultVertexFormat.POSITION_TEX,
-                (shaderInstance) -> soulCoreShader = shaderInstance);
-        registerShader(event, "soul_threads", DefaultVertexFormat.POSITION_TEX,
-                (shaderInstance) -> soulThreadsShader = shaderInstance);
         registerShader(event, "mirror_disk", DefaultVertexFormat.POSITION_TEX,
                 (shaderInstance) -> mirrorDiskShader = shaderInstance);
         registerShader(event, "mirror_depths", DefaultVertexFormat.POSITION_TEX,

@@ -2,9 +2,9 @@ package com.ghostipedia.cosmiccore.common.data;
 
 import com.ghostipedia.cosmiccore.CosmicCore;
 import com.ghostipedia.cosmiccore.api.item.LinkedTerminalBehavior;
+import com.ghostipedia.cosmiccore.api.item.component.HaloItemRenderData;
+import com.ghostipedia.cosmiccore.api.item.component.RadianceItemRenderData;
 import com.ghostipedia.cosmiccore.api.registries.CosmicRegistration;
-import com.ghostipedia.cosmiccore.client.renderer.item.HaloItemRenderer;
-import com.ghostipedia.cosmiccore.client.renderer.item.RadianceItemRenderer;
 import com.ghostipedia.cosmiccore.common.airControl.OxygenConfig;
 import com.ghostipedia.cosmiccore.common.data.tag.item.CosmicItemTags;
 import com.ghostipedia.cosmiccore.common.item.AbyssalSonarItem;
@@ -25,8 +25,6 @@ import com.ghostipedia.cosmiccore.common.item.behavior.OxygenSupplyTankBehavior;
 import com.ghostipedia.cosmiccore.common.item.behavior.StructureWriteBehavior;
 import com.ghostipedia.cosmiccore.common.item.behavior.VeinSurveyBehavior;
 import com.ghostipedia.cosmiccore.common.item.behavior.WirelessPDABehavior;
-import com.ghostipedia.cosmiccore.common.reflection.item.MirrorItem;
-import com.ghostipedia.cosmiccore.common.reflection.item.SoulMutilatorItem;
 import com.ghostipedia.cosmiccore.gtbridge.recipemaker.RecipeMakerBehavior;
 import com.ghostipedia.cosmiccore.utils.ItemData;
 import com.ghostipedia.cosmiccore.utils.StringUtil;
@@ -46,8 +44,6 @@ import com.gregtechceu.gtceu.common.item.behavior.TooltipBehavior;
 import com.gregtechceu.gtceu.common.registry.GTRegistration;
 import com.gregtechceu.gtceu.config.ConfigHolder;
 import com.gregtechceu.gtceu.data.recipe.CustomTags;
-
-import com.lowdragmc.lowdraglib.utils.LocalizationUtils;
 
 import net.minecraft.client.renderer.item.ItemProperties;
 import net.minecraft.network.chat.Component;
@@ -189,6 +185,12 @@ public class CosmicItems {
             .properties(p -> p.stacksTo(64))
             .defaultModel()
             .register();
+
+    public static final ItemEntry<Item> PAPER_RING = REGISTRATE.item("paper_ring", Item::new)
+            .lang("Paper Ring")
+            .defaultModel()
+            .register();
+
     // If you're working on the recent texture requests, this is where you need to go to change things :)
     public static final ItemEntry<ComponentItem> UTHERIUM_CERAMIC_LINER = registerChainItem(
             "utherium_ceramic_liner", "Utherium Ceramic Liner", CosmicCore.id("item/utherium_ceramic_liner"));
@@ -1302,43 +1304,6 @@ public class CosmicItems {
             .properties(p -> p.stacksTo(64))
             .defaultModel()
             .register();
-    public static final ItemEntry<ComponentItem> PERPETUITY_SHARD = REGISTRATE
-            .item("shard_of_perpetuity", ComponentItem::new)
-            .lang("Shard of Perpetuity")
-            .properties(p -> p.stacksTo(64))
-            .onRegister(attach(
-                    new TooltipBehavior(tooltips -> {
-                        tooltips.add(Component.translatable("cosmiccore.lore.shard_small.0"));
-                        tooltips.add(Component.translatable("cosmiccore.lore.shard_small.1"));
-                    }),
-                    new com.ghostipedia.cosmiccore.common.reflection.item.ShardConsumeBehavior(1)))
-            .defaultModel()
-            .register();
-    public static final ItemEntry<ComponentItem> PERPETUITY_SHARD_LARGE = REGISTRATE
-            .item("large_shard_of_perpetuity", ComponentItem::new)
-            .lang("Large Shard of Perpetuity")
-            .properties(p -> p.stacksTo(64))
-            .onRegister(attach(
-                    new TooltipBehavior(tooltips -> {
-                        tooltips.add(Component.translatable("cosmiccore.lore.shard_large.0"));
-                        tooltips.add(Component.translatable("cosmiccore.lore.shard_large.1"));
-                    }),
-                    new com.ghostipedia.cosmiccore.common.reflection.item.CapacityShardBehavior(10)))
-            .defaultModel()
-            .register();
-    public static final ItemEntry<ComponentItem> PERPETUITY_SHARD_MASSIVE = REGISTRATE
-            .item("cluster_of_perpetuity", ComponentItem::new)
-            .lang("Cluster of Perpetuity")
-            .properties(p -> p.stacksTo(16))
-            .onRegister(attach(
-                    new TooltipBehavior(tooltips -> {
-                        tooltips.add(Component.translatable("cosmiccore.lore.shard_huge.0"));
-                        tooltips.add(Component.translatable("cosmiccore.lore.shard_huge.1"));
-                        tooltips.add(Component.translatable("cosmiccore.lore.shard_huge.2"));
-                    }),
-                    new com.ghostipedia.cosmiccore.common.reflection.item.ScarRemovalBehavior()))
-            .defaultModel()
-            .register();
     public static final ItemEntry<ComponentItem> WIRELESS_PDA = REGISTRATE
             .item("wireless_pda", ComponentItem::new)
             .lang("Wireless Data PDA")
@@ -1762,7 +1727,7 @@ public class CosmicItems {
             .item("eschaton_processor", ComponentItem::new)
             .lang("Eschaton Processor")
             .properties(p -> p.stacksTo(64))
-            .onRegister(attachRenderer(() -> HaloItemRenderer.create(6, 0xFFFFFFFF,
+            .onRegister(attachRenderer(new HaloItemRenderData(6, 0xFFFFFFFF,
                     ResourceLocation.fromNamespaceAndPath(CosmicCore.MOD_ID, "block/iris/rnd/tentacle_halo"), true,
                     false)))
             .defaultModel()
@@ -1771,7 +1736,7 @@ public class CosmicItems {
             .item("eschaton_processor_assembly", ComponentItem::new)
             .lang("Eschaton Processor Assembly")
             .properties(p -> p.stacksTo(64))
-            .onRegister(attachRenderer(() -> HaloItemRenderer.create(6, 0xFFFFFFFF,
+            .onRegister(attachRenderer(new HaloItemRenderData(6, 0xFFFFFFFF,
                     ResourceLocation.fromNamespaceAndPath(CosmicCore.MOD_ID, "block/iris/rnd/tentacle_halo"), true,
                     false)))
             .defaultModel()
@@ -1780,7 +1745,7 @@ public class CosmicItems {
             .item("eschaton_processor_supercomputer", ComponentItem::new)
             .lang("Eschaton Processor Supercomputer")
             .properties(p -> p.stacksTo(64))
-            .onRegister(attachRenderer(() -> HaloItemRenderer.create(6, 0xFFFFFFFF,
+            .onRegister(attachRenderer(new HaloItemRenderData(6, 0xFFFFFFFF,
                     ResourceLocation.fromNamespaceAndPath(CosmicCore.MOD_ID, "block/iris/rnd/tentacle_halo"), true,
                     false)))
             .defaultModel()
@@ -1789,12 +1754,12 @@ public class CosmicItems {
             .item("eschaton_processor_mainframe", ComponentItem::new)
             .lang("Eschaton Processor Mainframe")
             .properties(p -> p.stacksTo(64))
-            .onRegister(attachRenderer(() -> HaloItemRenderer.create(6, 0xFFFFFFFF,
+            .onRegister(attachRenderer(new HaloItemRenderData(6, 0xFFFFFFFF,
                     ResourceLocation.fromNamespaceAndPath(CosmicCore.MOD_ID, "block/iris/rnd/tentacle_halo"), true,
                     false)))
             .onRegister(attach(new TooltipBehavior(lines -> {
                 lines.add(Component.literal(StringUtil
-                        .rainbowDancing(LocalizationUtils.format("cosmiccore.circuit.lore.tier.max.0"))));
+                        .rainbowDancing(Component.translatable("cosmiccore.circuit.lore.tier.max.0").getString())));
                 lines.add(Component.translatable("cosmiccore.circuit.lore.tier.max.1"));
                 lines.add(Component.translatable("cosmiccore.circuit.lore.tier.max.2"));
                 lines.add(Component.translatable("cosmiccore.circuit.lore.tier.max.3"));
@@ -1811,7 +1776,7 @@ public class CosmicItems {
             .properties(p -> p.stacksTo(64))
             .onRegister(attach(new TooltipBehavior(lines -> {
                 lines.add(Component.literal(StringUtil
-                        .goldFlicker(LocalizationUtils.format("cosmiccore.lore.broken_virtue.0"))));
+                        .goldFlicker(Component.translatable("cosmiccore.lore.broken_virtue.0").getString())));
             })))
             .defaultModel()
             .register();
@@ -1822,7 +1787,7 @@ public class CosmicItems {
             .properties(p -> p.stacksTo(64))
             .onRegister(attach(new TooltipBehavior(lines -> {
                 lines.add(Component.literal(StringUtil
-                        .midnightOscillation(LocalizationUtils.format("cosmiccore.lore.broken_virtue.1"))));
+                        .midnightOscillation(Component.translatable("cosmiccore.lore.broken_virtue.1").getString())));
             })))
             .defaultModel()
             .register();
@@ -2646,7 +2611,7 @@ public class CosmicItems {
             .properties(p -> p.stacksTo(1))
             .tag()
             .defaultModel()
-            .onRegister(attachRenderer(() -> RadianceItemRenderer.INSTANCE))
+            .onRegister(attachRenderer(RadianceItemRenderData.INSTANCE))
             .register();
     public static final ItemEntry<AsteroidItem> FERRIC_ASTEROID = REGISTRATE
             .item("ferric_asteroid", AsteroidItem::new)
@@ -2654,7 +2619,7 @@ public class CosmicItems {
             .properties(p -> p.stacksTo(1))
             .tag()
             .defaultModel()
-            .onRegister(attachRenderer(() -> RadianceItemRenderer.INSTANCE))
+            .onRegister(attachRenderer(RadianceItemRenderData.INSTANCE))
             .register();
 
     public static final ItemEntry<AsteroidItem> RARE_METAL_ASTEROID = REGISTRATE
@@ -2663,7 +2628,7 @@ public class CosmicItems {
             .properties(p -> p.stacksTo(1))
             .tag()
             .defaultModel()
-            .onRegister(attachRenderer(() -> RadianceItemRenderer.INSTANCE))
+            .onRegister(attachRenderer(RadianceItemRenderData.INSTANCE))
             .register();
 
     public static final ItemEntry<AsteroidItem> AURIC_ASTEROID = REGISTRATE
@@ -2672,7 +2637,7 @@ public class CosmicItems {
             .properties(p -> p.stacksTo(1))
             .tag()
             .defaultModel()
-            .onRegister(attachRenderer(() -> RadianceItemRenderer.INSTANCE))
+            .onRegister(attachRenderer(RadianceItemRenderData.INSTANCE))
             .register();
 
     public static final ItemEntry<AsteroidItem> BRIMSTONE_ASTEROID = REGISTRATE
@@ -2681,7 +2646,7 @@ public class CosmicItems {
             .properties(p -> p.stacksTo(1))
             .tag()
             .defaultModel()
-            .onRegister(attachRenderer(() -> RadianceItemRenderer.INSTANCE))
+            .onRegister(attachRenderer(RadianceItemRenderData.INSTANCE))
             .register();
 
     public static final ItemEntry<AsteroidItem> LITH_ASTEROID = REGISTRATE
@@ -2690,7 +2655,7 @@ public class CosmicItems {
             .properties(p -> p.stacksTo(1))
             .tag()
             .defaultModel()
-            .onRegister(attachRenderer(() -> RadianceItemRenderer.INSTANCE))
+            .onRegister(attachRenderer(RadianceItemRenderData.INSTANCE))
             .register();
 
     public static final ItemEntry<AsteroidItem> MAFIC_ASTEROID = REGISTRATE
@@ -2699,7 +2664,7 @@ public class CosmicItems {
             .properties(p -> p.stacksTo(1))
             .tag()
             .defaultModel()
-            .onRegister(attachRenderer(() -> RadianceItemRenderer.INSTANCE))
+            .onRegister(attachRenderer(RadianceItemRenderData.INSTANCE))
             .register();
 
     public static final ItemEntry<AsteroidItem> MOSSY_ASTEROID = REGISTRATE
@@ -2708,7 +2673,7 @@ public class CosmicItems {
             .properties(p -> p.stacksTo(1))
             .tag()
             .defaultModel()
-            .onRegister(attachRenderer(() -> RadianceItemRenderer.INSTANCE))
+            .onRegister(attachRenderer(RadianceItemRenderData.INSTANCE))
             .register();
 
     public static final ItemEntry<AsteroidItem> OCCULT_ASTEROID = REGISTRATE
@@ -2717,7 +2682,7 @@ public class CosmicItems {
             .properties(p -> p.stacksTo(1))
             .tag()
             .defaultModel()
-            .onRegister(attachRenderer(() -> RadianceItemRenderer.INSTANCE))
+            .onRegister(attachRenderer(RadianceItemRenderData.INSTANCE))
             .register();
 
     public static final ItemEntry<AsteroidItem> OXIDE_ASTEROID = REGISTRATE
@@ -2726,7 +2691,7 @@ public class CosmicItems {
             .properties(p -> p.stacksTo(1))
             .tag()
             .defaultModel()
-            .onRegister(attachRenderer(() -> RadianceItemRenderer.INSTANCE))
+            .onRegister(attachRenderer(RadianceItemRenderData.INSTANCE))
             .register();
 
     public static final ItemEntry<AsteroidItem> SANGUINE_ASTEROID = REGISTRATE
@@ -2735,7 +2700,7 @@ public class CosmicItems {
             .properties(p -> p.stacksTo(1))
             .tag()
             .defaultModel()
-            .onRegister(attachRenderer(() -> RadianceItemRenderer.INSTANCE))
+            .onRegister(attachRenderer(RadianceItemRenderData.INSTANCE))
             .register();
 
     public static final ItemEntry<AsteroidItem> WASTELAND_ASTEROID = REGISTRATE
@@ -2744,7 +2709,7 @@ public class CosmicItems {
             .properties(p -> p.stacksTo(1))
             .tag()
             .defaultModel()
-            .onRegister(attachRenderer(() -> RadianceItemRenderer.INSTANCE))
+            .onRegister(attachRenderer(RadianceItemRenderData.INSTANCE))
             .register();
 
     public static final ItemEntry<ComponentItem> TUNGSTENSTEEL_NANOLATTICE_SPOOL = REGISTRATE
@@ -2931,24 +2896,6 @@ public class CosmicItems {
             .lang("Quark Traveler's Boots")
             .properties(p -> p.rarity(Rarity.EPIC))
             .tag(CustomTags.PPE_ARMOR)
-            .register();
-
-    // -------------------------------------------------------------------------
-    // Reflection System
-    // -------------------------------------------------------------------------
-
-    public static final ItemEntry<MirrorItem> REFLECTION_MIRROR = REGISTRATE
-            .item("reflection_mirror", MirrorItem::new)
-            .lang("Mirror of Erosion")
-            .properties(p -> p.stacksTo(1))
-            .defaultModel()
-            .register();
-
-    public static final ItemEntry<SoulMutilatorItem> SOUL_MUTILATOR = REGISTRATE
-            .item("soul_mutilator", SoulMutilatorItem::new)
-            .lang("Soul Mutilator")
-            .properties(p -> p.stacksTo(1))
-            .defaultModel()
             .register();
 
     // -------------------------------------------------------------------------

@@ -16,7 +16,8 @@ public class CosmicLangHandler extends LangHandler {
             "sludge_digestor", "powderizer", "industrial_ore_sorter", "industrial_flotation_plant",
             "oneiric_sieve", "dissolution_vat", "phase_separator", "simple_desalter", "desalter",
             "steam_cracking_furnace", "fractional_condenser", "fluid_catalytic_cracking", "hydrotreating",
-            "hydrocracking", "catalytic_reforming", "delayed_coking", "fuckassbeeball", "laminator",
+            "hydrocracking", "catalytic_reforming", "delayed_coking", "vacuum_distillation", "fuckassbeeball",
+            "laminator",
             "chemical_dehydrator",
             "crystallizer", "eclipsed_dawnforge", "vorax", "mana_fluidizer", "pcb_fab", "titan_fusion", "lunar_hammer",
             "cryo_chamber", "soul_tester", "void_miner", "heavy_assembler", "plasmite_forge",
@@ -31,7 +32,8 @@ public class CosmicLangHandler extends LangHandler {
             "naquahine_reactor", "mini_naquahine_reactor", "industrial_chemvat", "biovat", "wasp", "bees",
             "core_drill", "regolith_sifter", "life_force_manipulator", "neutron_forge", "dream_basin",
             "mechanical_ritual", "link_test", "abyssal_culture_vat", "sculk_biochamber",
-            "biomana_digestor", "manawomb_leeching_pond", "industrial_primitive_blast_furnace"
+            "biomana_digestor", "manawomb_leeching_pond", "industrial_primitive_blast_furnace",
+            "turbine_power_station", "combustion_power_station"
     };
 
     private static String toTitle(String snakeCase) {
@@ -89,6 +91,16 @@ public class CosmicLangHandler extends LangHandler {
         // items
         replace(provider, "item.gtceu.tool.luv_meld_tool", "%s Meld Multitool");
         provider.add("item.cosmiccore.portable_gravity_core.tooltip", "§aNormalizes Gravity to Match Earth.");
+        provider.add("item.cosmiccore.steam_conveyor.tooltip", "Moves items between adjacent inventories.");
+        provider.add("item.cosmiccore.steam_pump.tooltip", "Moves fluids between adjacent tanks.");
+        provider.add("item.cosmiccore.steam_robot_arm.tooltip",
+                "Moves exact quantities of items between adjacent inventories.");
+        provider.add("item.cosmiccore.steam_fluid_regulator.tooltip",
+                "Moves exact quantities of fluids between adjacent tanks.");
+        provider.add("cosmiccore.universal.tooltip.item_transfer_rate", "Transfer Rate: %s items/s");
+        provider.add("cosmiccore.universal.tooltip.fluid_transfer_rate", "Transfer Rate: %s mB/t");
+        provider.add("tagprefix.wire_gt_twelve", "12x %s Wire");
+        provider.add("tagprefix.cable_gt_twelve", "12x %s Cable");
 
         replace(provider, "material.cosmiccore.blooming_sludge", "Blooming Sludge");
         replace(provider, "material.cosmiccore.bloom_rich_algae_solution", "Bloom Rich Algae Solution");
@@ -126,12 +138,29 @@ public class CosmicLangHandler extends LangHandler {
         replace(provider, "material.cosmiccore.olefin_gases", "Olefin Gases");
         replace(provider, "material.cosmiccore.cracked_naphtha", "Cracked Naphtha");
         replace(provider, "material.cosmiccore.aromatic_oil", "Aromatic Oil");
+        replace(provider, "material.cosmiccore.condensed_refinery_gas", "Condensed Refinery Gas");
         replace(provider, "material.cosmiccore.heavy_naphtha", "Heavy Naphtha");
         replace(provider, "material.cosmiccore.cracked_gasoline", "Cracked Gasoline");
         replace(provider, "material.cosmiccore.light_cycle_oil", "Light Cycle Oil");
         replace(provider, "material.cosmiccore.slurry_oils", "Slurry Oils");
         replace(provider, "material.cosmiccore.high_octane_reformate", "High-Octane Reformate");
         replace(provider, "material.cosmiccore.vacuum_gas_oils", "Vacuum Gas Oils");
+        replace(provider, "material.cosmiccore.waxy_distillates", "Waxy Distillates");
+        replace(provider, "material.cosmiccore.vacuum_residuals", "Vacuum Residuals");
+        replace(provider, "material.cosmiccore.bitumen", "Bitumen");
+        replace(provider, "material.cosmiccore.petroleum_coke", "Petroleum Coke");
+        replace(provider, "material.cosmiccore.calcined_petroleum_coke", "Calcined Petroleum Coke");
+        replace(provider, "material.cosmiccore.syngas", "Syngas");
+        replace(provider, "material.cosmiccore.hot_pyrolysis_vapors", "Hot Pyrolysis Vapors");
+        replace(provider, "material.cosmiccore.crude_benzene", "Crude Benzene");
+        replace(provider, "material.cosmiccore.wood_spirit", "Wood Spirit");
+        replace(provider, "material.cosmiccore.acidic_wood_liquor", "Acidic Wood Liquor");
+        replace(provider, "material.cosmiccore.light_tar_oils", "Light Tar Oils");
+        replace(provider, "material.cosmiccore.phenolic_oils", "Phenolic Oils");
+        replace(provider, "material.cosmiccore.tar_pitch", "Tar Pitch");
+        replace(provider, "material.cosmiccore.hot_coking_vapors", "Hot Coking Vapors");
+        replace(provider, "material.cosmiccore.ammonia_rich_liquor", "Ammonia-Rich Liquor");
+        replace(provider, "material.cosmiccore.naphthalene_oils", "Naphthalene Oils");
         replace(provider, "block.cosmiccore.rust_resistant_structural_casing", "Rust-Resistant Structural Casing");
         replace(provider, "block.cosmiccore.refractory_structural_casing", "Refractory Structural Casing");
         replace(provider, "block.cosmiccore.refractory_containment_casing", "Refractory Containment Casing");
@@ -575,6 +604,15 @@ public class CosmicLangHandler extends LangHandler {
         provider.add("cosmiccore.multiblock.configuration.reformer.short", "CR");
         provider.add("cosmiccore.multiblock.configuration.coker", "Delayed Coker");
         provider.add("cosmiccore.multiblock.configuration.coker.short", "DC");
+        provider.add("cosmiccore.multiblock.configuration.atmospheric", "Atmospheric Distillation");
+        provider.add("cosmiccore.multiblock.configuration.atmospheric.short", "AT");
+        provider.add("cosmiccore.multiblock.configuration.vacuum", "Vacuum Distillation");
+        provider.add("cosmiccore.multiblock.configuration.vacuum.short", "VA");
+        provider.add("cosmiccore.multiblock.distillation_tower.mode", "Operating Mode: %s");
+        provider.add("cosmiccore.multiblock.distillation_tower.vacuum_ready",
+                "Vacuum service online: fan module and tower height verified");
+        provider.add("cosmiccore.multiblock.distillation_tower.vacuum_required",
+                "Requires the attached frostproof fan module and at least four repeated tower layers");
         provider.add("cosmiccore.multiblock.configuration.physically_locked",
                 "Configuration is determined by the installed processing module");
         provider.add("cosmiccore.multiblock.configuration.core_only",
@@ -670,13 +708,6 @@ public class CosmicLangHandler extends LangHandler {
 
         // item tooltips
         // TODO reorganize, use multiLang where applicable
-        provider.add("cosmiccore.lore.shard_small.0", "§6A shard from a past eternity");
-        provider.add("cosmiccore.lore.shard_small.1", "§6it subtly echos to rewrite fate.");
-        provider.add("cosmiccore.lore.shard_large.0", "§aA large fragment from a past eternity");
-        provider.add("cosmiccore.lore.shard_large.1", "§ait echos to rewrite fate.");
-        provider.add("cosmiccore.lore.shard_huge.0", "§3An abnormally massive cluster from past eternity.");
-        provider.add("cosmiccore.lore.shard_huge.1", "§3it screams and wails at you to undo history.");
-        provider.add("cosmiccore.lore.shard_huge.2", "§cYour mind shatters trying to understand this.");
 
         provider.add("cosmiccore.omnia_circuit.lv", "§6Works as any LV Circuit.");
         provider.add("cosmiccore.omnia_circuit.mv", "§6Works as any MV Circuit.");
@@ -743,6 +774,28 @@ public class CosmicLangHandler extends LangHandler {
         provider.add("cosmiccore.jade.me_computation_array.buffer", "Stored Power: %s / %s EU (%s)");
         provider.add("cosmiccore.jade.me_computation_array.uplink.online", "Uplink Online");
         provider.add("cosmiccore.jade.me_computation_array.uplink.offline", "Uplink Offline");
+        provider.add("config.jade.plugin_cosmiccore.power_grid_telemetry", "[CosmicCore] Power Grid Telemetry");
+        provider.add("config.jade.plugin_cosmiccore.modular_power_station_mode",
+                "[CosmicCore] Modular Power Station Mode");
+        provider.add("cosmiccore.jade.modular_power_station.mode", "Mode: %s");
+        provider.add("cosmiccore.jade.modular_power_station.mode.turbine", "Turbine Power Station");
+        provider.add("cosmiccore.jade.modular_power_station.mode.combustion", "Combustion Power Station");
+        provider.add("cosmiccore.jade.power.input_rating", "§fFace INPUT§7: %s V @ %s A");
+        provider.add("cosmiccore.jade.power.output_rating", "§fFace OUTPUT§7: %s V @ %s A");
+        provider.add("cosmiccore.jade.power.face_disconnected", "§fFace EU§7: Not connected");
+        provider.add("cosmiccore.jade.power.input_flow", "§fBlock INPUT§7: %s A @ %s EU/t");
+        provider.add("cosmiccore.jade.power.output_flow", "§fBlock OUTPUT§7: %s A @ %s EU/t");
+        provider.add("cosmiccore.jade.power.cable_rating", "§fCable Rating§r: %s V (%s) @ %s A");
+        provider.add("cosmiccore.jade.power.cable_voltage", "§fLive Voltage§r: %s V (%s)");
+        provider.add("cosmiccore.jade.power.cable_voltage_idle", "§fLive Voltage§r: §fIdle");
+        provider.add("cosmiccore.jade.power.cable_load", "§fLoad§r: %s §aA §7/ %s §aEU/t §7(§r%s§b%%§7)");
+        provider.add("cosmiccore.jade.power.cable_temperature", "§fTemperature: %s §bK");
+        provider.add("cosmiccore.jade.power.cable_overload", "§4Overload§c: %s%% §4to failure");
+        provider.add("cosmiccore.jade.power.cable_cause", "§cCause: %s");
+        provider.add("cosmiccore.jade.power.cable_cause.overamperage", "§6Overamperage");
+        provider.add("cosmiccore.jade.power.cable_cause.overvoltage", "§6Overvoltage");
+        provider.add("cosmiccore.jade.power.cable_cause.both", "§6Overamperage and overvoltage");
+        provider.add("cosmiccore.jade.power.cable_cause.residual", "§6Residual heat");
         provider.add("cosmiccore.machine.me_computation_array.display.components", "Components: %s Cores / %s Relays");
         provider.add("cosmiccore.machine.me_computation_array.display.cwu", "Compute/tick: %s / %s CWU/t");
         provider.add("cosmiccore.machine.me_computation_array.display.energy", "EU Demand: %s EU/t");
@@ -794,9 +847,9 @@ public class CosmicLangHandler extends LangHandler {
                 "You have entered charging range [Range - %s blocks]");
         provider.add("cosmiccore.wireless_charger.left_range", "You have left charging range [Range - %s blocks]");
         provider.add("cosmiccore.circuit.lore.tier.max.0", "MAX Tier Circuit");
-        provider.add("cosmiccore.circuit.lore.tier.max.1", "Not a processor- but an Obituary.");
-        provider.add("cosmiccore.circuit.lore.tier.max.2", "Input: Existence.");
-        provider.add("cosmiccore.circuit.lore.tier.max.3", "Output: A single conclusion.");
+        provider.add("cosmiccore.circuit.lore.tier.max.1", "The Final Data Processor of the Titan of ???");
+        provider.add("cosmiccore.circuit.lore.tier.max.2", "In entered every world");
+        provider.add("cosmiccore.circuit.lore.tier.max.3", "as did nothing leave");
 
         provider.add("cosmiccore.lore.broken_virtue.0", "Perpetuity Shudders Softly");
         provider.add("cosmiccore.lore.broken_virtue.1", "Something has gone very wrong.");
@@ -1162,12 +1215,19 @@ public class CosmicLangHandler extends LangHandler {
         provider.add("cosmiccore.stellar.slot.star_seed", "Star Seed");
 
         // =========================================================================
-        // REFLECTION SYSTEM
+        // EXTENDED SUBSYSTEM LANGUAGE
         // =========================================================================
-        initReflectionLang(provider);
+        initExtendedSubsystemLang(provider);
     }
 
-    private static void initReflectionLang(RegistrateLangProvider provider) {
+    private static void initExtendedSubsystemLang(RegistrateLangProvider provider) {
+        provider.add("cosmiccore.tooltip.steam_boiler.maximum_steam_output", "§6Maximum Output§f: %s mB/t Steam");
+        provider.add("cosmiccore.tooltip.steam_boiler.maximum_pressurized_output",
+                "§6Maximum Output§f: %s mB/t Pressurized Steam");
+        provider.add("cosmiccore.tooltip.steam_boiler.steam_equivalent", "§eSteam Equivalent§f: %s mB/t Steam");
+        provider.add("cosmiccore.tooltip.steam_boiler.temperature_scaling", "§7Output scales with boiler temperature");
+        provider.add("cosmiccore.tooltip.large_boiler.output_scaling", "Output scales with temperature and throttle");
+
         // Stellar Iris Module System
         provider.add("cosmiccore.multiblock.stellar_module.not_connected", "§cNot Connected to Stellar Iris");
         provider.add("cosmiccore.multiblock.stellar_module.iris_not_formed", "§cStellar Iris Not Formed");
@@ -1189,7 +1249,7 @@ public class CosmicLangHandler extends LangHandler {
         provider.add("config.jade.plugin_cosmiccore.drone_station", "[CosmicCore] Drone Station Info");
         provider.add("config.jade.plugin_cosmiccore.drone_maintenance_interface",
                 "[CosmicCore] Drone Maintenance Interface");
-        provider.add("gtceu.jade.changes_eu_tick", "%s EU/t");
+        provider.add("gtceu.jade.changes_eu_tick", "Net Storage: %s EU/t");
 
         // JADE Stellar Module Provider
         provider.add("cosmiccore.jade.stellar_module.not_connected", "Iris: Not Connected");
@@ -1583,93 +1643,13 @@ public class CosmicLangHandler extends LangHandler {
         provider.add("cosmiccore.stellar.upgrade.void_attunement.desc",
                 "+2% bonus from void effects per level (max 10 levels)");
 
-        // Quake Movement (Reflection Bargain)
+        // Globestrider Movement
         provider.add("key.categories.cosmiccore.movement", "Quake Movement");
         provider.add("key.cosmiccore.movement.dash", "Dash");
 
         provider.add("item.cosmiccore.travelers_boots.tooltip",
                 "Negates fall damage and steps up full blocks while standing.");
 
-        // Soul Shapes
-        provider.add("cosmiccore.soul_shape.unshaped.name", "Unshaped");
-        provider.add("cosmiccore.soul_shape.unshaped.tagline", "Your soul remains formless, undefined.");
-        provider.add("cosmiccore.soul_shape.unshaped.description",
-                "You have not yet chosen a shape. Your potential is limitless, but so is your lack of direction.");
-
-        provider.add("cosmiccore.soul_shape.revenant.name", "The Revenant");
-        provider.add("cosmiccore.soul_shape.revenant.tagline", "I was the first to die. I'll be the last to fall.");
-        provider.add("cosmiccore.soul_shape.revenant.description",
-                "You've died so many times that death itself is just a phase. Death-related bargains are empowered.");
-        provider.add("cosmiccore.soul_shape.revenant.super.name", "Defy");
-        provider.add("cosmiccore.soul_shape.revenant.super.description",
-                "When you would die, you don't. Enter a fury state with massive lifesteal. Heal to full or die for real.");
-
-        provider.add("cosmiccore.soul_shape.hollow.name", "The Hollow");
-        provider.add("cosmiccore.soul_shape.hollow.tagline", "I am empty. Consume All.");
-        provider.add("cosmiccore.soul_shape.hollow.description",
-                "You gain nothing passively. You take. Everything you have, you took from something else.");
-        provider.add("cosmiccore.soul_shape.hollow.super.name", "Devour");
-        provider.add("cosmiccore.soul_shape.hollow.super.description",
-                "Consume an entity whole. Gain Nourishment and leech a stat from what you ate.");
-
-        provider.add("cosmiccore.soul_shape.engine.name", "The Engine");
-        provider.add("cosmiccore.soul_shape.engine.tagline", "The factory must grow. And I must too.");
-        provider.add("cosmiccore.soul_shape.engine.description",
-                "You are the cog work. Efficiency. Throughput. Optimization. Speed-related bargains are empowered.");
-        provider.add("cosmiccore.soul_shape.engine.super.name", "Overclock");
-        provider.add("cosmiccore.soul_shape.engine.super.description",
-                "Overclock for a breif moment. Attack, move, mine, and build at massively boosted speeds.");
-
-        provider.add("cosmiccore.soul_shape.globedancer.name", "The Globedancer");
-        provider.add("cosmiccore.soul_shape.globedancer.tagline", "I am never where you strike.");
-        provider.add("cosmiccore.soul_shape.globedancer.description",
-                "Movement is identity. You are not hit because you are not there. Mobility bargains are empowered, defense is cursed.");
-        provider.add("cosmiccore.soul_shape.globedancer.super.name", "Slipstream");
-        provider.add("cosmiccore.soul_shape.globedancer.super.description",
-                "Become untouchable. No fall damage, no collision. Pure fluid motion.");
-
-        provider.add("cosmiccore.soul_shape.bulwark.name", "The Bulwark");
-        provider.add("cosmiccore.soul_shape.bulwark.tagline", "I endure what would break you.");
-        provider.add("cosmiccore.soul_shape.bulwark.description",
-                "You don't dodge. You don't retreat. You take it. Defensive bargains are empowered, mobility is cursed.");
-        provider.add("cosmiccore.soul_shape.bulwark.super.name", "Last Stand");
-        provider.add("cosmiccore.soul_shape.bulwark.super.description",
-                "Plant yourself. Emit a damaging aura, take massively reduced damage, reflect damage to attackers.");
-
-        provider.add("cosmiccore.soul_shape.bloodthirst.name", "The Bloodthirst");
-        provider.add("cosmiccore.soul_shape.bloodthirst.tagline", "I end things before they begin.");
-        provider.add("cosmiccore.soul_shape.bloodthirst.description",
-                "Kill or be killed. Damage bargains are empowered, defense is cursed.");
-        provider.add("cosmiccore.soul_shape.bloodthirst.super.name", "Rip and Tear");
-        provider.add("cosmiccore.soul_shape.bloodthirst.super.description",
-                "Enter a frenzy. Kill a mob, dash to the next, execute low-health enemies. RIP. AND. TEAR.");
-
-        // Soul Mutilator Item
-        provider.add("item.cosmiccore.soul_mutilator.tooltip", "A twisted instrument that can reshape your very soul.");
-        provider.add("item.cosmiccore.soul_mutilator.tooltip.warning", "This choice is permanent. Choose wisely.");
-        provider.add("cosmiccore.soul_mutilator.not_awakened", "Your soul has not yet awakened. Die a few more times.");
-        provider.add("cosmiccore.soul_mutilator.already_shaped", "Your soul is already shaped as %s.");
-        provider.add("cosmiccore.soul_mutilator.select_shape", "Select a Soul Shape:");
-        provider.add("cosmiccore.soul_mutilator.shape_selected", "Your soul has been mutilated into %s.");
-
-        // Soul Shape UI (Mirror of Erosion integration)
-        provider.add("reflection.cosmiccore.ui.hub.mutilate_soul", "[Reshape Your Core]");
-        provider.add("reflection.cosmiccore.ui.soul_shape.select_header", "Choose Your Shape");
-        provider.add("reflection.cosmiccore.ui.soul_shape.warning_permanent",
-                "This choice is permanent and cannot be undone.");
-        provider.add("reflection.cosmiccore.ui.soul_shape.intro.0",
-                "The blade rests against your core. This will redefine what you are.");
-        provider.add("reflection.cosmiccore.ui.soul_shape.intro.1",
-                "Once cut, the shape is permanent. Your core can only be shaped once.");
-        provider.add("reflection.cosmiccore.ui.soul_shape.intro.2",
-                "Think through this carefully. There's no going back.");
-        provider.add("reflection.cosmiccore.ui.soul_shape.transforming.0", "You cut.");
-        provider.add("reflection.cosmiccore.ui.soul_shape.transforming.1",
-                "Your entire being feels on fire as you shift into %s...");
-        provider.add("reflection.cosmiccore.ui.soul_shape.complete.0",
-                "You are now %s. Something fundamental changed.");
-        provider.add("reflection.cosmiccore.ui.soul_shape.complete.1",
-                "There's no returning to what you were.");
         provider.add("cosmiccore.hud.oxygen.suffocating", "SUFFOCATING");
         provider.add("cosmiccore.tooltip.hand_sort", "Can be hand sorted for: %s");
         provider.add("cosmiccore.emi.composite_ore_sorting", "Ore Sorting Diagram");
@@ -1817,6 +1797,51 @@ public class CosmicLangHandler extends LangHandler {
         provider.add("cosmiccore.bloomwyrm.recipe.charge_input", "Bloomwyrm Charge use: %s");
         provider.add("cosmiccore.bloomwyrm.recipe.charge_output", "Bloomwyrm Charge yield: +%s");
         provider.add("cosmiccore.bloomwyrm.recipe.max_parallel", "Max parallel: %s");
+        provider.add("cosmiccore.steam.recipe.high_pressure", "%s mB/t @ %s s (High Pressure Steam Machines)");
+        provider.add("cosmiccore.steam.recipe.low_pressure", "%s mB/t @ %s s (Low Pressure Steam Machines)");
+        provider.add("cosmiccore.multiblock.preview.group_repeats", "Repeated Module Groups: %s");
+        provider.add("cosmiccore.multiblock.modular_power_station.tooltip.0",
+                "Attach §eDrive Modules§f (1-4) and a Stator Module to create a suitable power plant.");
+        provider.add("cosmiccore.multiblock.modular_power_station.tooltip.1",
+                "§7Each stage boosts max power generation by 4 Amps.");
+        provider.add("cosmiccore.multiblock.modular_power_station.tooltip.2",
+                "§fTurbine assemblies accept Steam and Gas Turbine fuels through one hardware-selected mode.");
+        provider.add("cosmiccore.multiblock.modular_power_station.tooltip.3",
+                "§7Dynamo Tier is limited by stator tier.");
+        provider.add("cosmiccore.multiblock.modular_power_station.drive", "Drive: %s");
+        provider.add("cosmiccore.multiblock.modular_power_station.stages", "Drive Stages: %s / 4");
+        provider.add("cosmiccore.multiblock.modular_power_station.stator", "Stator: %s (%s V)");
+        provider.add("cosmiccore.multiblock.modular_power_station.throttle", "Output Limit: %s%% (%s EU/t, %s A)");
+        provider.add("cosmiccore.multiblock.modular_power_station.fuel.idle", "Fuel Rate: Waiting for an active fuel");
+        provider.add("cosmiccore.multiblock.modular_power_station.fuel.none", "Fuel Rate: No fluid fuel input");
+        provider.add("cosmiccore.multiblock.modular_power_station.fuel.rate",
+                "%s: %s mB/min | %s mB/h");
+        provider.add("cosmiccore.multiblock.modular_power_station.drive.none", "Undetected");
+        provider.add("cosmiccore.multiblock.modular_power_station.drive.turbine", "Steam/Gas Turbine");
+        provider.add("cosmiccore.multiblock.modular_power_station.drive.combustion", "Combustion Engine");
+        provider.add("cosmiccore.multiblock.modular_power_station.status.ready", "Assembly Ready!");
+        provider.add("cosmiccore.multiblock.modular_power_station.status.no_stages", "No drive stages detected!");
+        provider.add("cosmiccore.multiblock.modular_power_station.status.invalid_stage",
+                "A drive stage has invalid or mixed components!");
+        provider.add("cosmiccore.multiblock.modular_power_station.status.mixed_stages",
+                "All drive stages must use the same drive-core type!");
+        provider.add("cosmiccore.multiblock.modular_power_station.status.missing_stator",
+                "No supported stator housing was detected!");
+        provider.add("cosmiccore.multiblock.modular_power_station.status.mixed_stators",
+                "Every stator housing must use the same voltage tier!");
+        provider.add("cosmiccore.multiblock.modular_power_station.status.output_mismatch",
+                "The output hatch voltage tier must match the stator!");
+        provider.add("cosmiccore.ponder.modular_power_station.header", "The Modular Power Station");
+        provider.add("cosmiccore.ponder.shared.modular_power_station.text_1",
+                "The controller and general power hardware form the station core");
+        provider.add("cosmiccore.ponder.shared.modular_power_station.text_2",
+                "Each drive module adds one integral slice with a shared Part-work wall");
+        provider.add("cosmiccore.ponder.shared.modular_power_station.text_3",
+                "Up to four of these slices may be added, each adding an additional 4A of maximum power output.");
+        provider.add("cosmiccore.ponder.shared.modular_power_station.text_4",
+                "Modular Power Stations Must have all generator slices share the same integral parts, no mixing turbine and combustion modules!");
+        provider.add("cosmiccore.ponder.shared.modular_power_station.text_5",
+                "The ending houses a large stator to produce power, the dynamo output is limited by stator coil tier.");
         for (var recipeType : BuiltInRegistries.RECIPE_TYPE) {
             if (recipeType instanceof GTRecipeType gtRecipeType &&
                     gtRecipeType.registryName.getNamespace().equals("gtceu")) {

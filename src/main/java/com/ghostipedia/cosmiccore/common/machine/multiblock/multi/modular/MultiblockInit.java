@@ -62,6 +62,7 @@ public class MultiblockInit {
         SteamCrackingFurnace.init();
         FractionalCondenser.init();
         ConversionComplex.init();
+        ModularPowerStation.init();
         SludgeDigestor.init();
         SufferingChamber.init();
         TitanFusion.init();
@@ -77,15 +78,10 @@ public class MultiblockInit {
         VileFissionReactor.init();
         VoidSaltReactor.init();
         AtomicReconstructor.init();
-        DivingBell.init();
         LinkTestStation.init();
         BloomwyrmSystem.init();
         StarLadder.init();
         StarLadderResearchHub.init();
         // KryosynCrackingChamber.init();
-
-        // Cargo Moths System
-        MothCargoStation.init();
-        MothCargoDropOff.init();
     }
 }

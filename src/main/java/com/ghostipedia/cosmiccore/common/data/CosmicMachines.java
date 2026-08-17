@@ -13,11 +13,13 @@ import com.ghostipedia.cosmiccore.common.ae2gt.CosmicStockingBusPartMachine;
 import com.ghostipedia.cosmiccore.common.ae2gt.CosmicStockingHatchPartMachine;
 import com.ghostipedia.cosmiccore.common.block.debug.CreativeThermiaContainerMachine;
 import com.ghostipedia.cosmiccore.common.machine.WirelessChargerMachine;
+import com.ghostipedia.cosmiccore.common.machine.multiblock.multi.VacuumDistillationTower;
 import com.ghostipedia.cosmiccore.common.machine.multiblock.multi.WirelessDataBankMachine;
 import com.ghostipedia.cosmiccore.common.machine.multiblock.multi.logic.MEComputationComponentTier;
 import com.ghostipedia.cosmiccore.common.machine.multiblock.part.*;
 import com.ghostipedia.cosmiccore.common.machine.multiblock.tier.TieredMultiblockPatterns;
 import com.ghostipedia.cosmiccore.common.machine.part.WirelessDataSensor;
+import com.ghostipedia.cosmiccore.common.power.steam.SteamBoilerTooltips;
 import com.ghostipedia.cosmiccore.gtbridge.CosmicRecipeTypes;
 import com.ghostipedia.nebulaeae2.compute.ComputeTuning;
 
@@ -77,7 +79,6 @@ import static com.ghostipedia.cosmiccore.common.data.recipe.CosmicRecipeModifier
 import static com.ghostipedia.cosmiccore.common.data.recipe.CosmicRecipeModifiers.EBF_TIER_STREAK;
 import static com.ghostipedia.cosmiccore.gtbridge.CosmicRecipeTypes.BIO_LAB;
 import static com.gregtechceu.gtceu.api.GTValues.*;
-import static com.gregtechceu.gtceu.api.capability.recipe.IO.OUT;
 import static com.gregtechceu.gtceu.api.machine.property.GTMachineModelProperties.*;
 import static com.gregtechceu.gtceu.api.multiblock.Predicates.*;
 import static com.gregtechceu.gtceu.api.multiblock.util.RelativeDirection.*;
@@ -455,41 +456,26 @@ public class CosmicMachines {
                     Component.translatable("gtceu.part_sharing.enabled"))
             .register();
 
-    public static final MachineDefinition[] ENERGY_OUTPUT_HATCH_4A = registerTieredMachines("energy_output_hatch_4a",
-            (holder, tier) -> new EnergyHatchPartMachine(holder, tier, OUT, 4),
-            (tier, builder) -> builder
-                    .langValue(VNF[tier] + " 4A Dynamo Hatch")
-                    .rotationState(RotationState.ALL)
-                    .abilities(PartAbility.OUTPUT_ENERGY)
-                    .modelProperty(IS_FORMED, false)
-                    .tooltips(Component.translatable("gtceu.universal.tooltip.voltage_out",
-                            FormattingUtil.formatNumbers(V[tier]), VNF[tier]),
-                            Component.translatable("gtceu.universal.tooltip.amperage_out", 4),
-                            Component.translatable("gtceu.universal.tooltip.energy_storage_capacity",
-                                    FormattingUtil
-                                            .formatNumbers(EnergyHatchPartMachine.getHatchEnergyCapacity(tier, 4))),
-                            Component.translatable("gtceu.machine.energy_hatch.output_hi_amp.tooltip"))
-                    .overlayTieredHullModel("energy_output_hatch_4a")
-                    .register(),
-            GTValues.tiersBetween(ULV, HV));
+    static {
+        REGISTRATE.creativeModeTab(GTCreativeModeTabs.MACHINE);
+    }
 
-    public static final MachineDefinition[] ENERGY_OUTPUT_HATCH_16A = registerTieredMachines("energy_output_hatch_16a",
-            (holder, tier) -> new EnergyHatchPartMachine(holder, tier, OUT, 16),
-            (tier, builder) -> builder
-                    .langValue(VNF[tier] + " 16A Dynamo Hatch")
-                    .rotationState(RotationState.ALL)
-                    .abilities(PartAbility.OUTPUT_ENERGY)
-                    .modelProperty(IS_FORMED, false)
-                    .tooltips(Component.translatable("gtceu.universal.tooltip.voltage_out",
-                            FormattingUtil.formatNumbers(V[tier]), VNF[tier]),
-                            Component.translatable("gtceu.universal.tooltip.amperage_out", 16),
-                            Component.translatable("gtceu.universal.tooltip.energy_storage_capacity",
-                                    FormattingUtil
-                                            .formatNumbers(EnergyHatchPartMachine.getHatchEnergyCapacity(tier, 16))),
-                            Component.translatable("gtceu.machine.energy_hatch.output_hi_amp.tooltip"))
-                    .overlayTieredHullModel("energy_output_hatch_16a")
-                    .register(),
-            GTValues.tiersBetween(ULV, HV));
+    public static final MachineDefinition[] ENERGY_INPUT_HATCH_4A = registerEnergyHatches(
+            "energy_input_hatch_4a", IO.IN, 4, GTValues.tiersBetween(LV, HV));
+    public static final MachineDefinition[] ENERGY_OUTPUT_HATCH_4A = registerEnergyHatches(
+            "energy_output_hatch_4a", IO.OUT, 4, GTValues.tiersBetween(ULV, HV));
+    public static final MachineDefinition[] ENERGY_INPUT_HATCH_16A = registerEnergyHatches(
+            "energy_input_hatch_16a", IO.IN, 16, GTValues.tiersBetween(LV, HV));
+    public static final MachineDefinition[] ENERGY_OUTPUT_HATCH_16A = registerEnergyHatches(
+            "energy_output_hatch_16a", IO.OUT, 16, GTValues.tiersBetween(ULV, HV));
+    public static final MachineDefinition[] ENERGY_INPUT_HATCH_64A = registerEnergyHatches(
+            "energy_input_hatch_64a", IO.IN, 64, GTValues.tiersBetween(LV, HV));
+    public static final MachineDefinition[] ENERGY_OUTPUT_HATCH_64A = registerEnergyHatches(
+            "energy_output_hatch_64a", IO.OUT, 64, GTValues.tiersBetween(LV, HV));
+
+    static {
+        REGISTRATE.creativeModeTab(CosmicCreativeModeTabs.COSMIC_CORE);
+    }
 
     // Enable If needed Inside of Dev
     public static final MultiblockMachineDefinition SOUL_TESTER = REGISTRATE
@@ -591,6 +577,33 @@ public class CosmicMachines {
                         }
                     }).register();
                 },
+                tiers);
+    }
+
+    private static MachineDefinition[] registerEnergyHatches(String name, IO io, int amperage, int... tiers) {
+        String direction = io == IO.IN ? "input" : "output";
+        String tooltipDirection = io == IO.IN ? "in" : "out";
+        String hatchName = io == IO.IN ? "Energy Hatch" : "Dynamo Hatch";
+        PartAbility ability = io == IO.IN ? PartAbility.INPUT_ENERGY : PartAbility.OUTPUT_ENERGY;
+        long capacityMultiplier = io == IO.IN ? 16L : 64L;
+        return registerTieredMachines(name,
+                (holder, tier) -> new EnergyHatchPartMachine(holder, tier, io, amperage),
+                (tier, builder) -> builder
+                        .langValue(VNF[tier] + " " + amperage + "A " + hatchName)
+                        .rotationState(RotationState.ALL)
+                        .abilities(ability)
+                        .modelProperty(IS_FORMED, false)
+                        .tooltips(
+                                Component.translatable("gtceu.universal.tooltip.voltage_" + tooltipDirection,
+                                        FormattingUtil.formatNumbers(V[tier]), VNF[tier]),
+                                Component.translatable("gtceu.universal.tooltip.amperage_" + tooltipDirection,
+                                        amperage),
+                                Component.translatable("gtceu.universal.tooltip.energy_storage_capacity",
+                                        FormattingUtil.formatNumbers(V[tier] * capacityMultiplier * amperage)),
+                                Component.translatable("gtceu.machine.energy_hatch." + direction + "_hi_amp.tooltip"))
+                        .overlayTieredHullModel(GTCEu.id(
+                                "block/machine/part/energy_" + direction + "_hatch_" + amperage + "a"))
+                        .register(),
                 tiers);
     }
 
@@ -1038,6 +1051,7 @@ public class CosmicMachines {
     // AlvearyModifierPartMachine) shelved with Forestry (bead cosmiccore-42.13)
 
     public static void init() {
+        SteamBoilerTooltips.init();
         GTRecipeTypes.MIXER_RECIPES.setMaxSize(IO.IN, CosmicRecipeCapabilities.EMBER, 1);
         TieredMultiblockPatterns.register(GTMultiMachines.ELECTRIC_BLAST_FURNACE,
                 () -> MultiblockPatternBuilder.start(FRONT, UP, LEFT)
@@ -1160,9 +1174,10 @@ public class CosmicMachines {
             PatternPredicate maintenance = autoAbilities(true, false, false).setMaxGlobalLimited(1);
             return MultiblockPatternBuilder.start(UP, FRONT, LEFT)
                     .slice(" AAA ", "AAAAA", "AAAAA", "AAAAA", " ABA ")
-                    .sliceRepeatable(1, 12, " CCC ", "C   C", "C   C", "C   C", " CCC ")
+                    .sliceRepeatable(1, 12, " CCC ", "C###C", "C###C", "C###C", " CCC ")
                     .slice(" DDD ", "DDDDD", "DDEDD", "DDDDD", " DDD ")
                     .where('A', blocks(LIGHTWEIGHT_STAINLESS_STEEL_CASING.get())
+                            .or(abilities(PartAbility.IMPORT_ITEMS).setMaxGlobalLimited(1))
                             .or(abilities(PartAbility.EXPORT_ITEMS).setMaxGlobalLimited(1))
                             .or(abilities(PartAbility.INPUT_ENERGY).setMinGlobalLimited(1)
                                     .setMaxGlobalLimited(2))
@@ -1172,9 +1187,11 @@ public class CosmicMachines {
                     .where('C', blocks(LIGHTWEIGHT_STAINLESS_STEEL_CASING.get()).or(exportPredicate))
                     .where('D', blocks(LIGHTWEIGHT_STAINLESS_STEEL_CASING.get()).or(exportPredicate))
                     .where('E', abilities(PartAbility.MUFFLER).setExactLimit(1))
-                    .where(' ', air())
+                    .where('#', air())
+                    .where(' ', any())
                     .build();
         }));
+        VacuumDistillationTower.init();
 
         GTMultiMachines.ASSEMBLY_LINE.setPattern("main",
                 GTMemoizer.memoize(() -> MultiblockPatternBuilder.start(BACK, UP, RIGHT)

@@ -6,6 +6,7 @@ import com.ghostipedia.cosmiccore.api.capability.recipe.SoulRecipeCapability;
 import com.ghostipedia.cosmiccore.common.data.CosmicSounds;
 import com.ghostipedia.cosmiccore.common.machine.multiblock.multi.logic.bloomwyrm.BloomwyrmRecipeKeys;
 
+import com.gregtechceu.gtceu.GTCEu;
 import com.gregtechceu.gtceu.api.block.ICoilType;
 import com.gregtechceu.gtceu.api.capability.recipe.FluidRecipeCapability;
 import com.gregtechceu.gtceu.api.capability.recipe.IO;
@@ -17,10 +18,8 @@ import com.gregtechceu.gtceu.common.mui.GTGuiTextures;
 import com.gregtechceu.gtceu.common.recipe.condition.DimensionCondition;
 import com.gregtechceu.gtceu.utils.ResearchManager;
 
-import com.lowdragmc.lowdraglib.utils.LocalizationUtils;
-
-import net.minecraft.client.resources.language.I18n;
 import net.minecraft.core.registries.Registries;
+import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 
@@ -30,10 +29,6 @@ import static com.gregtechceu.gtceu.common.data.GTRecipeTypes.*;
 
 public class CosmicRecipeTypes {
 
-    // TODO(Ore Chaos): these 6 ore-processing recipe types were referenced by their controllers +
-    // CosmicCoreOreRecipeHandler but never registered (WIP gap). IO sizes inferred from the recipe builders
-    // (flotation: item+fluid in / item out; powderizer: item in/out; sorter: 1 in / SORTER_IO_CAP=6 out) and
-    // sensible defaults for the no-recipe-yet ones (sludge/oneiric/dissolution). Tune IO/UI/sound as needed.
     public static final GTRecipeType SLUDGE_DIGESTOR = register(CosmicCore.id("sludge_digestor"), MULTIBLOCK)
             .setMaxIOSize(3, 3, 2, 2)
             .UI(builder -> builder.setProgressBar(GTGuiTextures.PROGRESS_ARROW));
@@ -56,7 +51,7 @@ public class CosmicRecipeTypes {
             .UI(builder -> builder.setProgressBar(GTGuiTextures.PROGRESS_ARROW));
     public static final GTRecipeType PHASE_SEPARATOR = register(CosmicCore.id("phase_separator"), MULTIBLOCK)
             .setSound(GTSoundEntries.CENTRIFUGE)
-            .setMaxIOSize(1, 0, 1, 6)
+            .setMaxIOSize(1, 0, 2, 6)
             .UI(builder -> builder.setProgressBar(GTGuiTextures.PROGRESS_ARROW_MULTIPLE));
     public static final GTRecipeType SIMPLE_DESALTER = register(CosmicCore.id("simple_desalter"), ELECTRIC)
             .setSound(GTSoundEntries.CHEMICAL)
@@ -97,6 +92,11 @@ public class CosmicRecipeTypes {
     public static final GTRecipeType DELAYED_COKING = register(CosmicCore.id("delayed_coking"), MULTIBLOCK)
             .setSound(GTSoundEntries.FIRE)
             .setMaxIOSize(2, 2, 3, 6)
+            .UI(builder -> builder.setProgressBar(GTGuiTextures.PROGRESS_ARROW_MULTIPLE));
+    public static final GTRecipeType VACUUM_DISTILLATION = register(
+            CosmicCore.id("vacuum_distillation"), MULTIBLOCK)
+            .setSound(GTSoundEntries.COOLING)
+            .setMaxIOSize(0, 1, 1, 12)
             .UI(builder -> builder.setProgressBar(GTGuiTextures.PROGRESS_ARROW_MULTIPLE));
 
     public static final GTRecipeType COSMIC_DUMMY_SPAM_YEETER = GTRecipeTypes
@@ -455,6 +455,20 @@ public class CosmicRecipeTypes {
             .setMaxIOSize(1, 0, 1, 0)
             .setSound(GTSoundEntries.ARC)
             .UI(builder -> builder.setProgressBar(GTGuiTextures.PROGRESS_GAS_COLLECTOR));
+    public static final GTRecipeType TURBINE_POWER_STATION = GTRecipeTypes
+            .register(CosmicCore.id("turbine_power_station"), GTRecipeTypes.GENERATOR)
+            .setMaxIOSize(0, 0, 1, 1)
+            .setEUIO(IO.OUT)
+            .setSound(GAS_SUCC)
+            .UI(builder -> builder.setFluidSlotOverlay(IO.IN, 0, GTGuiTextures.CENTRIFUGE_OVERLAY)
+                    .setProgressBar(GTGuiTextures.PROGRESS_GAS_COLLECTOR));
+    public static final GTRecipeType COMBUSTION_POWER_STATION = GTRecipeTypes
+            .register(CosmicCore.id("combustion_power_station"), GTRecipeTypes.GENERATOR)
+            .setMaxIOSize(0, 0, 1, 1)
+            .setEUIO(IO.OUT)
+            .setSound(GAS_SUCC)
+            .UI(builder -> builder.setFluidSlotOverlay(IO.IN, 0, GTGuiTextures.FURNACE_OVERLAY_2)
+                    .setProgressBar(GTGuiTextures.PROGRESS_ARROW_MULTIPLE));
     public static final GTRecipeType INDUSTRIAL_CHEMVAT = GTRecipeTypes
             .register(CosmicCore.id("industrial_chemvat"), GTRecipeTypes.MULTIBLOCK)
             .setMaxIOSize(6, 6, 6, 6)
@@ -608,8 +622,8 @@ public class CosmicRecipeTypes {
                 SLUDGE_DIGESTOR, POWDERIZER, INDUSTRIAL_ORE_SORTER, INDUSTRIAL_FLOTATION_PLANT, ONEIRIC_SIEVE,
                 DISSOLUTION_VAT, PHASE_SEPARATOR, SIMPLE_DESALTER, DESALTER, STEAM_CRACKING_FURNACE,
                 FRACTIONAL_CONDENSER, FLUID_CATALYTIC_CRACKING, HYDROTREATING, HYDROCRACKING,
-                CATALYTIC_REFORMING, DELAYED_COKING, COSMIC_DUMMY_SPAM_YEETER, LAMINATOR, CHEMICAL_DEHYDRATOR,
-                CRYSTALLIZER,
+                CATALYTIC_REFORMING, DELAYED_COKING, VACUUM_DISTILLATION, COSMIC_DUMMY_SPAM_YEETER, LAMINATOR,
+                CHEMICAL_DEHYDRATOR, CRYSTALLIZER,
                 DAWNFORGE_ECLIPSED,
                 VORAX, MANA_FLUIDIZER,
                 PCB_FABRICATOR, TITAN_FUSION_RECIPES, LUNAR_HAMMER, CRYOGENICS_CHAMBER, SOUL_TESTER_RECIPES,
@@ -632,73 +646,76 @@ public class CosmicRecipeTypes {
         // 8.0.0: GTRecipeType.addDataInfo(...) was removed; register XEI data-info lines on the dataInfos list.
         ORBITAL_FORGE_EBF.getDataInfos().add(data -> {
             int temp = data.getInt("ebf_temp");
-            return LocalizationUtils.format("gtceu.recipe.temperature", temp);
+            return Component.translatable("gtceu.recipe.temperature", temp).getString();
         });
         ORBITAL_FORGE_EBF.getDataInfos().add(data -> {
             int temp = data.getInt("ebf_temp");
             ICoilType requiredCoil = ICoilType.getMinRequiredType(temp);
             if (requiredCoil != null && !requiredCoil.getMaterial().isNull()) {
-                return LocalizationUtils.format("gtceu.recipe.coil.tier",
-                        I18n.get(requiredCoil.getMaterial().getUnlocalizedName()));
+                return Component.translatable("gtceu.recipe.coil.tier",
+                        Component.translatable(requiredCoil.getMaterial().getUnlocalizedName()).getString())
+                        .getString();
             }
             return "";
         });
         ORBITAL_FORGE_ABS.getDataInfos().add(data -> {
             int temp = data.getInt("ebf_temp");
-            return LocalizationUtils.format("gtceu.recipe.temperature", temp);
+            return Component.translatable("gtceu.recipe.temperature", temp).getString();
         });
         ORBITAL_FORGE_ABS.getDataInfos().add(data -> {
             int temp = data.getInt("ebf_temp");
             ICoilType requiredCoil = ICoilType.getMinRequiredType(temp);
             if (requiredCoil != null && !requiredCoil.getMaterial().isNull()) {
-                return LocalizationUtils.format("gtceu.recipe.coil.tier",
-                        I18n.get(requiredCoil.getMaterial().getUnlocalizedName()));
+                return Component.translatable("gtceu.recipe.coil.tier",
+                        Component.translatable(requiredCoil.getMaterial().getUnlocalizedName()).getString())
+                        .getString();
             }
             return "";
         });
         NAQUAHINE_REACTOR.getDataInfos().add(data -> {
             int minStrength = data.getInt("min_field");
-            return LocalizationUtils.format("cosmiccore.recipe.minField", minStrength);
+            return Component.translatable("cosmiccore.recipe.minField", minStrength).getString();
         });
         NAQUAHINE_REACTOR.getDataInfos().add(data -> {
             int decayRate = data.getInt("decay_rate");
             if (!data.getBoolean("per_tick")) {
-                return LocalizationUtils.format("cosmiccore.recipe.fieldSlam", decayRate);
+                return Component.translatable("cosmiccore.recipe.fieldSlam", decayRate).getString();
             }
-            return LocalizationUtils.format("cosmiccore.recipe.fieldDecay", decayRate);
+            return Component.translatable("cosmiccore.recipe.fieldDecay", decayRate).getString();
         });
         WASP_RECIPES.getDataInfos()
-                .add(data -> LocalizationUtils.format("cosmiccore.recipe.asteroid_weight_greater_1"));
+                .add(data -> Component.translatable("cosmiccore.recipe.asteroid_weight_greater_1").getString());
         for (GTRecipeType type : new GTRecipeType[] {
                 ABYSSAL_CULTURE_VAT, SCULK_BIOCHAMBER, BIOMANA_DIGESTOR, MANAWOMB_LEECHING_POND }) {
             type.getDataInfos().add(data -> data.contains(BloomwyrmRecipeKeys.BIOPOWER_INPUT) ?
-                    LocalizationUtils.format(
+                    Component.translatable(
                             "cosmiccore.bloomwyrm.recipe.biopower_input",
-                            data.getInt(BloomwyrmRecipeKeys.BIOPOWER_INPUT)) :
+                            data.getInt(BloomwyrmRecipeKeys.BIOPOWER_INPUT)).getString() :
                     "");
             type.getDataInfos().add(data -> data.contains(BloomwyrmRecipeKeys.BIOPOWER_OUTPUT) ?
-                    LocalizationUtils.format(
+                    Component.translatable(
                             "cosmiccore.bloomwyrm.recipe.biopower_output",
-                            data.getInt(BloomwyrmRecipeKeys.BIOPOWER_OUTPUT)) :
+                            data.getInt(BloomwyrmRecipeKeys.BIOPOWER_OUTPUT)).getString() :
                     "");
             type.getDataInfos().add(data -> data.contains(BloomwyrmRecipeKeys.CHARGE_INPUT) ?
-                    LocalizationUtils.format(
+                    Component.translatable(
                             "cosmiccore.bloomwyrm.recipe.charge_input",
-                            data.getLong(BloomwyrmRecipeKeys.CHARGE_INPUT)) :
+                            data.getLong(BloomwyrmRecipeKeys.CHARGE_INPUT)).getString() :
                     "");
             type.getDataInfos().add(data -> data.contains(BloomwyrmRecipeKeys.CHARGE_OUTPUT) ?
-                    LocalizationUtils.format(
+                    Component.translatable(
                             "cosmiccore.bloomwyrm.recipe.charge_output",
-                            data.getLong(BloomwyrmRecipeKeys.CHARGE_OUTPUT)) :
+                            data.getLong(BloomwyrmRecipeKeys.CHARGE_OUTPUT)).getString() :
                     "");
             type.getDataInfos().add(data -> data.contains(BloomwyrmRecipeKeys.MAX_PARALLEL) ?
-                    LocalizationUtils.format(
+                    Component.translatable(
                             "cosmiccore.bloomwyrm.recipe.max_parallel",
-                            data.getInt(BloomwyrmRecipeKeys.MAX_PARALLEL)) :
+                            data.getInt(BloomwyrmRecipeKeys.MAX_PARALLEL)).getString() :
                     "");
         }
 
         LASER_ENGRAVER_RECIPES.setMaxIOSize(2, 2, 1, 1);
+        PACKER_RECIPES.setMaxIOSize(3, 2, 0, 0);
         // Oh my God
         MIXER_RECIPES.setMaxTooltips(4);
         BREWING_RECIPES.setMaxTooltips(4);
@@ -715,6 +732,20 @@ public class CosmicRecipeTypes {
         });
         LARGE_CHEMICAL_RECIPES.onRecipeBuild((builder, provider) -> {
             INDUSTRIAL_CHEMVAT.copyFrom(builder)
+                    .save(provider);
+        });
+        STEAM_TURBINE_FUELS.onRecipeBuild((builder, provider) -> {
+            if (!builder.id.equals(GTCEu.id("steam"))) {
+                TURBINE_POWER_STATION.copyFrom(builder)
+                        .save(provider);
+            }
+        });
+        GAS_TURBINE_FUELS.onRecipeBuild((builder, provider) -> {
+            TURBINE_POWER_STATION.copyFrom(builder)
+                    .save(provider);
+        });
+        COMBUSTION_GENERATOR_FUELS.onRecipeBuild((builder, provider) -> {
+            COMBUSTION_POWER_STATION.copyFrom(builder)
                     .save(provider);
         });
 

@@ -164,6 +164,7 @@ public final class GTEmiRecipeBounds {
             height += OVERCLOCK_BUTTON_HEIGHT;
             components++;
         }
+
         return height + Math.max(0, components - 1) * TEXT_COMPONENT_PADDING;
     }
 

@@ -37,7 +37,6 @@ import com.ghostipedia.cosmiccore.common.machine.multiblock.multi.modular.Multib
 import com.ghostipedia.cosmiccore.common.mob.DimensionMobScaling;
 import com.ghostipedia.cosmiccore.common.network.CCoreNetwork;
 import com.ghostipedia.cosmiccore.common.recipe.condition.CosmicConditions;
-import com.ghostipedia.cosmiccore.common.reflection.bargain.CosmicBargains;
 import com.ghostipedia.cosmiccore.ember.CosmicEmberCapabilities;
 import com.ghostipedia.cosmiccore.gtbridge.CosmicRecipeTypes;
 
@@ -46,8 +45,6 @@ import com.gregtechceu.gtceu.api.data.chemical.material.event.PostMaterialEvent;
 import com.gregtechceu.gtceu.api.recipe.lookup.ingredient.MapIngredientTypeManager;
 import com.gregtechceu.gtceu.common.block.CoilBlock;
 import com.gregtechceu.gtceu.config.ConfigHolder;
-
-import com.lowdragmc.lowdraglib.Platform;
 
 import net.minecraft.commands.synchronization.ArgumentTypeInfos;
 import net.minecraft.commands.synchronization.SingletonArgumentInfo;
@@ -59,6 +56,7 @@ import net.neoforged.fml.common.Mod;
 import net.neoforged.fml.config.ModConfig;
 import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.neoforged.fml.event.lifecycle.FMLLoadCompleteEvent;
+import net.neoforged.fml.loading.FMLEnvironment;
 import net.neoforged.neoforge.capabilities.RegisterCapabilitiesEvent;
 import net.neoforged.neoforge.common.world.chunk.RegisterTicketControllersEvent;
 import net.neoforged.neoforge.network.event.RegisterPayloadHandlersEvent;
@@ -95,9 +93,8 @@ public class CosmicCore {
         CosmicCropFeatures.register(modBus);
         CosmicFirmamentFeatures.register(modBus);
         CosmicRituals.register(modBus);
-        CosmicBargains.init();
 
-        if (Platform.isClient()) {
+        if (FMLEnvironment.dist.isClient()) {
             CosmicCoreClient.init(modBus);
         }
     }
@@ -127,7 +124,9 @@ public class CosmicCore {
         CosmicRecipeTypes.init();
         CosmicBlocks.init();
         CosmicBlockEntities.init();
+        CosmicCovers.init();
         CosmicItems.init();
+        CosmicCoverItems.init();
         CosmicBotanyItemRegistration.init();
         CosmicCrops.init();
         CosmicPredicates.init();

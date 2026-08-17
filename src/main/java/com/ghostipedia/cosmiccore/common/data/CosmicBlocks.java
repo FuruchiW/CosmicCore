@@ -6,10 +6,8 @@ import com.ghostipedia.cosmiccore.api.block.IMagnetType;
 import com.ghostipedia.cosmiccore.client.renderer.block.NebulaeCoilRenderer;
 import com.ghostipedia.cosmiccore.common.block.BerryVineBlock;
 import com.ghostipedia.cosmiccore.common.block.ComputationBayCasingBlock;
-import com.ghostipedia.cosmiccore.common.block.DivingBellEscapePad;
 import com.ghostipedia.cosmiccore.common.block.LargeArcaniteClusterBlock;
 import com.ghostipedia.cosmiccore.common.block.MagnetBlock;
-import com.ghostipedia.cosmiccore.common.block.MothHomeBlock;
 import com.ghostipedia.cosmiccore.common.block.MurkFloraBlock;
 import com.ghostipedia.cosmiccore.common.block.MurkKelpBlock;
 import com.ghostipedia.cosmiccore.common.blockentity.CosmicCoilBlockEntity;
@@ -377,6 +375,30 @@ public class CosmicBlocks {
             CosmicCore.id("block/casings/solid/steel_plated_bronze_casing"));
     public static final BlockEntry<Block> ALTERNATOR_FLUX_COILING = createCasingBlock("alternator_flux_coiling",
             CosmicCore.id("block/casings/solid/alternator_flux_coiling_copper"));
+    public static final BlockEntry<Block> STEAM_GAS_TURBINE_INTEGRAL_COMPONENTS = createCasingBlock(
+            "steam_gas_turbine_integral_components", "Steam/Gas Turbine Integral Components",
+            CosmicCore.id("block/casings/solid/steam_gas_turbine_integral_components"));
+    public static final BlockEntry<Block> COMBUSTION_INTEGRAL_COMPONENTS = createCasingBlock(
+            "combustion_integral_components", "Combustion Integral Components",
+            CosmicCore.id("block/casings/solid/combustion_integral_components"));
+    public static final BlockEntry<Block> INDUSTRIAL_PARTWORK = createCasingBlock(
+            "industrial_partwork", "Industrial Partwork",
+            CosmicCore.id("block/casings/solid/industrial_partwork"));
+    public static final BlockEntry<Block> INDUSTRIAL_CONVERTER_SHELL = createCasingBlock(
+            "industrial_converter_shell", "Industrial Converter Shell",
+            CosmicCore.id("block/casings/solid/industrial_converter_shell"));
+    public static final BlockEntry<Block> LOW_VOLTAGE_STATOR_HOUSING = createCasingBlock(
+            "low_voltage_stator_housing", "Low Voltage Stator Housing",
+            CosmicCore.id("block/casings/solid/low_voltage_stator_housing"));
+    public static final BlockEntry<Block> MEDIUM_VOLTAGE_STATOR_HOUSING = createCasingBlock(
+            "medium_voltage_stator_housing", "Medium Voltage Stator Housing",
+            CosmicCore.id("block/casings/solid/medium_voltage_stator_housing"));
+    public static final BlockEntry<Block> HIGH_VOLTAGE_STATOR_HOUSING = createCasingBlock(
+            "high_voltage_stator_housing", "High Voltage Stator Housing",
+            CosmicCore.id("block/casings/solid/high_voltage_stator_housing"));
+    public static final BlockEntry<Block> EXTREME_VOLTAGE_STATOR_HOUSING = createCasingBlock(
+            "extreme_voltage_stator_housing", "Extreme Voltage Stator Housing",
+            CosmicCore.id("block/casings/solid/extreme_voltage_stator_housing"));
     public static final BlockEntry<Block> LIGHTWEIGHT_INDUSTRIAL_CASING = createCasingBlock(
             "lightweight_industrial_casing", CosmicCore.id("block/casings/solid/lightweight_industrial_casing"));
     public static final BlockEntry<Block> LIGHTWEIGHT_MECHANICAL_PARTWORK = createCasingBlock(
@@ -1003,34 +1025,6 @@ public class CosmicBlocks {
     public static final BlockEntry<Block> ZBLAN_REINFORCED_GLASS = createGlassCasingBlock(
             "zblan_glass", CosmicCore.id("block/casings/glass/zblan_glass"), () -> RenderType::translucent);
 
-    public static final BlockEntry<DivingBellEscapePad> DIVING_BELL_ESCAPE_PAD = REGISTRATE
-            .block("diving_bell_escape_pad", DivingBellEscapePad::new)
-            .initialProperties(() -> Blocks.STONE)
-            .exBlockstate(GTModels.cubeAllModel(CosmicCore.id("block/diving_bell_escape_pad")))
-            .simpleItem()
-            .register();
-
-    // MOTH HOME BLOCKS - For Cargo Moths system
-    public static final BlockEntry<MothHomeBlock> MOTH_HOME_T1 = createMothHomeBlock(1);
-    public static final BlockEntry<MothHomeBlock> MOTH_HOME_T2 = createMothHomeBlock(2);
-    public static final BlockEntry<MothHomeBlock> MOTH_HOME_T3 = createMothHomeBlock(3);
-    public static final BlockEntry<MothHomeBlock> MOTH_HOME_T4 = createMothHomeBlock(4);
-
-    // Moth Station Casing
-    public static final BlockEntry<Block> MOTH_STATION_CASING = createCasingBlock("moth_station_casing",
-            CosmicCore.id("block/casings/solid/moth_station_casing"));
-
-    private static BlockEntry<MothHomeBlock> createMothHomeBlock(int tier) {
-        return REGISTRATE
-                .block("moth_home_t" + tier, p -> new MothHomeBlock(p, tier))
-                .lang("Moth Home (T" + tier + ")")
-                .initialProperties(() -> Blocks.IRON_BLOCK)
-                .properties(p -> p.strength(3.0f, 6.0f))
-                .exBlockstate(GTModels.cubeAllModel(CosmicCore.id("block/casings/moth/moth_home_t" + tier)))
-                .simpleItem()
-                .register();
-    }
-
     private static BlockEntry<Block> createGlassCasingBlock(String name, ResourceLocation texture,
                                                             Supplier<Supplier<RenderType>> type) {
         NonNullFunction<BlockBehaviour.Properties, Block> supplier = TransparentBlock::new;
@@ -1111,6 +1105,19 @@ public class CosmicBlocks {
     public static BlockEntry<Block> createCasingBlock(String name, ResourceLocation texture) {
         return createCasingBlock(name, Block::new, texture, () -> Blocks.IRON_BLOCK,
                 () -> RenderType::cutoutMipped);
+    }
+
+    public static BlockEntry<Block> createCasingBlock(String name, String lang, ResourceLocation texture) {
+        return REGISTRATE.block(name, Block::new)
+                .initialProperties(() -> Blocks.IRON_BLOCK)
+                .properties(p -> p.isValidSpawn((state, level, pos, ent) -> false))
+                .addLayer(() -> RenderType::cutoutMipped)
+                .lang(lang)
+                .exBlockstate(GTModels.cubeAllModel(texture))
+                .tag(CustomTags.MINEABLE_WITH_CONFIG_VALID_PICKAXE_WRENCH)
+                .item(BlockItem::new)
+                .build()
+                .register();
     }
 
     public static BlockEntry<Block> createCasingBlock(String name,
